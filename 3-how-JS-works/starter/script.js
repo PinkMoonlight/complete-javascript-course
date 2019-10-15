@@ -1,9 +1,22 @@
 ///////////////////////////////////////
 // Lecture: Hoisting
 
+//function declaration - will hoist
+//can call the function before its declared
 
+calculateAge(1965);
 
+function calculateAge(year) {
+    console.log(2016 -year);
+}
 
+//function expression - won't hoist
+
+    //retirement(1940);
+
+var retirement = function(year) {
+    console.log(65 - (2016 - year));
+}
 
 
 
