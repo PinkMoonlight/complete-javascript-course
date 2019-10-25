@@ -293,7 +293,7 @@ interviewQuestion('developer')('Kate'); */
 					 `);
 				} else {
 				console.log(`Incorrect, the answer was ${questionArr[num].answer}`)
-				console.log(`You're total score is still ${score}
+				console.log(`You're total score is still ${score}.
 
 					`);
 
