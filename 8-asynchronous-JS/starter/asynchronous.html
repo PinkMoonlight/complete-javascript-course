@@ -9,7 +9,182 @@
 <body>
     <h1>Asynchronous JavaScript</h1>
     <script>
-        
+    	/*
+        const second = () => {
+        	setTimeout(() => {
+        		console.log('Async hello');
+        	}, 2000);
+        }
+
+        const first = () => {
+        	console.log("hello there");
+        	second();
+        	console.log("the end");
+        }
+        first();
+		*/
+/////////////////////////////////////////////////////////////////////////
+		//ES5 version >> referred to as 'callback hell'
+		/*
+		function getRecipe() {
+			setTimeout(() => {
+				const recipeID = [523, 883, 432, 974];
+				console.log(recipeID);
+
+				setTimeout( id => {
+					const recipe = {title: 'Fresh tomato pasta', publisher: 'Kate'};
+					console.log(`${id}: ${recipe.title}`);
+
+					setTimeout( publisher => {
+						const recipe2 = {title: 'Italian Pizza', publisher: `${publisher}`};
+						console.log(recipe2);
+					}, 1500, recipe.publisher);
+				}, 1500, recipeID[1]);
+			}, 1500);
+		}
+		getRecipe();
+		*/
+
+		/////////////////////////////////////////////////////////////
+		//Promise ES6
+
+		const getIDs = new Promise((resolve, reject) => { //executer function	
+			setTimeout( () => {
+				resolve([523, 883, 432, 974]); //returns
+			}, 1500);
+
+		});
+
+		const getRecipe = recID => {
+			return new Promise((resolve, reject) => {
+				setTimeout(ID => {
+					const recipe = {title: 'Fresh tomato pasta', publisher: 'Kate'};
+					resolve(`${ID}: ${recipe.title} by ${recipe.publisher}`);
+				}, 1500, recID);
+				
+			});
+		};
+
+		const getRelated = publisher => {
+			return new Promise((resolve, reject) => {
+				setTimeout(pub => {
+					const recipe2 = {title: 'Italian Pizza', publisher: pub};
+						resolve(`${recipe2.title}: by ${recipe2.publisher}`);
+				}, 1500, publisher);
+			});
+		}
+		/*
+		getIDs
+		.then(IDs => {
+			console.log(IDs); // for success
+			return getRecipe(IDs[2])
+		})
+		.then(recipe => {
+			console.log(recipe);
+			return getRelated('Kate');
+		})
+		.then(recipe => {
+			console.log(recipe);
+		})
+		.catch(IDs => {
+			console.log("error!!"); // for failure
+		});
+		*/
+///////////////////////////////////////////////////////////////
+// Async Await 
+	/*
+	async function getRecipesAW() {
+		const IDs = await getIDs;
+		console.log(IDs);
+		const recipe = await getRecipe(IDs[2]);
+		console.log(recipe);
+		const related = await getRelated('Kate');
+		console.log(related);
+
+		return recipe; //returns a promise
+	}
+
+	getRecipesAW().then(result => console.log(`${result} is the best ever!`));
+
+	*/ 
+//AJAX
+function getWeather(woeid) {
+	fetch(`https://crossorigin.me/https://www.metaweather.com/api/location/${woeid}/`)
+	.then(result => {
+		console.log(result);
+		return result.json(); // returns a promise
+	})
+	.then(data => {
+		//console.log(data);
+		const today = data.consolidated_weather[0];
+		console.log( `Temperatures today in ${data.title} stay between ${Math.round(today.min_temp)} and ${Math.round(today.max_temp)}`)
+	})
+	.catch(error => console.log('Error!!'));
+};
+	getWeather(2487956); //san francisco
+	getWeather(44418); // London
+
+
+
+	async function getWeatherAW(woeid) {
+		try {
+			const result = await fetch
+			(`https://crossorigin.me/https://www.metaweather.com/api/location/${woeid}/`);
+			const data = await result.json();
+			const tomorrow = data.consolidated_weather[1];
+			console.log( `Temperatures tomorrow in ${data.title} stay between ${Math.round(tomorrow.min_temp)} and ${Math.round(tomorrow.max_temp)}.`);
+			return data;
+		} catch(error) {
+			alert(error);
+		}
+		
+	};
+
+
+	// TERMINAL and COMMAND LINE
+
+	//to make a new directory write >> mkdir newFolderName
+	//to make a new file write >> touch newFileName.js
+	//to copy a file to parent directory >> cp fileName.js ..
+	//to move a file to parent directory >> mv fileName.js ..
+	//to remove a file >> rm fileName  //gone for good!
+	//to remove a filder and contents >> rm -r folderName
+	//to open a file >> open fileName
+
+	//to check for node version installed >> node -v
+	//to check for npm version installed >> npm -v
+
+	//to create a package.json file for project >> npm init
+	//answer questions, give file name and description
+
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
