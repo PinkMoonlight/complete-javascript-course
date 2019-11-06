@@ -46,7 +46,7 @@
 		*/
 
 		/////////////////////////////////////////////////////////////
-		//Promise ES6
+		//Promises ES6
 
 		const getIDs = new Promise((resolve, reject) => { //executer function	
 			setTimeout( () => {
@@ -163,6 +163,34 @@ function getWeather(woeid) {
 	//to delete it >> npm uninstall jquery --save
 	//to install something globally instead of local file >> sudo npm install name of item --global   // or -g
 
+	// for webpack command line interface (Cli) >> npm install webpack-cli --save-dev  // saves to the dev dependencies
+	//to run a npm script called dev >> npm run dev
+
+
+	////////////////////////////////////////////////////////////////
+	//Module Import and Exporting
+
+
+
+
+	/*
+// Export
+export default "I am an exported module"; 
+export const add = (a, b) => a+ b;
+export const multiply = (a, b) => a * b;
+export const ID = 23;
+
+// Import
+import string from './models/Search'; //for default 
+
+import {add, multiply, ID} from './views/searchView';
+//OR
+import {add as a, multiply as m, ID} from './views/searchView'; //renames variables
+console.log(`Using imported functions ${a(ID, 2)} and ${m(3, 5)} and ${string}`);
+// OR
+import * as searchView from './views/searchView'; //imports everything
+console.log(`Using imported functions ${searchView.add(searchView.ID, 2)} and ${searchView.multiply(3, 5)} and ${string}`);
+*/
     </script>
 </body>
 </html>
