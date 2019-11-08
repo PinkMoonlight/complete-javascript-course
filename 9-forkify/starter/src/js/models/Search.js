@@ -1,4 +1,4 @@
-import axios from 'axios'; //axios works like fetch but with support for old browsers
+import axios from 'axios'; //axios works like fetch but with support for old browsers   
 
 export default class Search {
     constructor(query) {
