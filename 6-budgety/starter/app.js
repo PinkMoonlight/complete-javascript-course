@@ -123,6 +123,12 @@ let budgetController = (function(){
 			};
 		},
 
+		//Save to local storage for page reload
+		updateLocalStorage: function() {
+			let dataString = JSON.stringify(data);
+			localStorage.setItem('savedData', dataString);
+		},
+
 		testing: function() {
 			console.log(data);
 		}
@@ -153,7 +159,7 @@ let UIController = (function() {
 	let formatNumber = function(num, type) {
 			let numSplit, int, dec;
 
-			num = Math.abs(num); //abs is absolute removes sigh of number
+			num = Math.abs(num); //abs is absolute, removes +/- sign of number
 			num = num.toFixed(2);
 
 			numSplit = num.split('.'); //results stored in an array
@@ -182,7 +188,7 @@ let UIController = (function() {
 			return {
 				type: document.querySelector(DOMstrings.inputType).value, // will be either inc or exp
 				description: document.querySelector(DOMstrings.inputDescription).value,
-				value: parseFloat(document.querySelector(DOMstrings.inputValue).value) //parseFloat converts strong to number
+				value: parseFloat(document.querySelector(DOMstrings.inputValue).value) //parseFloat converts string to number
 			};
 		},
 
@@ -216,7 +222,7 @@ let UIController = (function() {
 	                    </div>
 	            </div>`
 	        }
-			// 2. Replay the placeholder text with actual data >>> pre es6 WAY
+			// 2. Replace the placeholder text with actual data >>> pre es6 WAY
 			//newHtml = html.replace('%id%', obj.id);
 			//newHtml = newHtml.replace('%description%', obj.description);
 			//newHTML = newHtml.replace('%value%', formatNumber(obj.value, type); 
@@ -256,7 +262,7 @@ let UIController = (function() {
 			} else {
 				document.querySelector(DOMstrings.budgetValue).textContent = `${formatBudget}`;	
 			}
-						
+
 			document.querySelector(DOMstrings.budgetInc).textContent = formatNumber(object.totalInc, 'inc');
 			document.querySelector(DOMstrings.budgetExp).textContent = formatNumber(object.totalExp, 'exp');
 		
@@ -291,6 +297,8 @@ let UIController = (function() {
 			year = now.getFullYear();
 
 			document.querySelector(DOMstrings.dateLabel).textContent = `${months[month]}, ${year}`;
+			localStorage.setItem('displayMonth', `${months[month]}, ${year}`);
+			return `${months[month]}, ${year}`;
 		},
 
 		changedType: function() {
@@ -337,6 +345,9 @@ let controller = (function(budgetCtrl, UICtrl) {
 		let budget = budgetCtrl.getBudget();
 		// 3. display the budget on the UI 
 		UICtrl.displayBudget(budget);
+		//4. push data to local storage
+		budgetCtrl.updateLocalStorage();
+
 	};
 
 	let updatePercentages = function () {
@@ -405,13 +416,35 @@ let controller = (function(budgetCtrl, UICtrl) {
 		return {
 			init: function() {
 				console.log("applicaion has started");
-				UICtrl.displayMonth();
+				let date = UICtrl.displayMonth();
+				let savedData = localStorage.getItem('savedData');
+				let savedDate = localStorage.getItem('displayMonth');
+				if (savedDate === date && savedData) {
+					let previousBudget = JSON.parse(savedData);
+					console.log(previousBudget);
+					UICtrl.displayBudget({
+						budget: previousBudget.budget,
+						totalInc: previousBudget.totals.inc,
+						totalExp: previousBudget.totals.exp,
+						percentage: previousBudget.percentage,
+					});
+					let savedExp = previousBudget.allItems.exp.map(expense => {
+						UICtrl.addListItem(expense, 'exp');
+						budgetCtrl.addItem('exp', expense.description, expense.value);
+					});
+					let savedInc = previousBudget.allItems.inc.map(income => {
+						UICtrl.addListItem(income, 'inc');
+						budgetCtrl.addItem('inc', income.description, income.value);
+					});
+					setupEventListeners();	
+			} else {
 				UICtrl.displayBudget({
 					budget: 0,
 					totalInc: 0,
 					totalExp: 0,
 					percentage: -1
 				});
+			};
 				setupEventListeners();
 			}
 		};
